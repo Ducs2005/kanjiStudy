@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "304509963989",
+    "project_id": "kanjistudy-6cd66",
+    "storage_bucket": "kanjistudy-6cd66.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:304509963989:android:fe67bbbdba43134d3b9c5c",
+        "android_client_info": {
+          "package_name": "com.example.kanjistudy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBLB3wUq2mo9ojWabKvzbk9aoP9jQbN3ho"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
