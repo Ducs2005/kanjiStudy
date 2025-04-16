@@ -32,12 +32,14 @@ fun GameScreen(
     var userInput by remember { mutableStateOf("") }
     var isCorrect by remember { mutableStateOf<Boolean?>(null) }
     var showDetails by remember { mutableStateOf(false) }
+    var skipped by remember { mutableStateOf(false) } // Track if the Kanji was skipped
 
     LaunchedEffect(gameKanjiList, showDetails) {
         if (!showDetails && gameKanjiList.isNotEmpty()) {
             currentKanji = gameKanjiList[Random.nextInt(gameKanjiList.size)]
             userInput = ""
             isCorrect = null
+            skipped = false
         }
     }
 
@@ -75,7 +77,19 @@ fun GameScreen(
                         modifier = Modifier.padding(16.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text(text = "Correct!", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)
+                        if (skipped) {
+                            Text(
+                                text = "Skipped!",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.secondary
+                            )
+                        } else {
+                            Text(
+                                text = "Correct!",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                        }
                         Text(text = "Meaning: ${currentKanji!!.meaning}")
                         Text(text = "Kun: ${currentKanji!!.kunReadings.joinToString(", ")}")
                         Text(text = "On: ${currentKanji!!.onReadings.joinToString(", ")}")
@@ -84,7 +98,7 @@ fun GameScreen(
                 }
                 Button(
                     onClick = {
-                        showDetails = false
+                        showDetails = false // Move to the next Kanji
                     }
                 ) {
                     Text("Next Kanji")
@@ -106,18 +120,31 @@ fun GameScreen(
                     )
                 }
 
-                Button(
-                    onClick = {
-                        val correctKun = currentKanji!!.kunReadings.any { it.equals(userInput.trim(), ignoreCase = true) }
-                        val correctOn = currentKanji!!.onReadings.any { it.equals(userInput.trim(), ignoreCase = true) }
-                        isCorrect = correctKun || correctOn
-                        if (isCorrect == true) {
-                            showDetails = true
-                        }
-                    },
-                    enabled = userInput.isNotBlank()
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Submit")
+                    Button(
+                        onClick = {
+                            val correctKun = currentKanji!!.kunReadings.any { it.equals(userInput.trim(), ignoreCase = true) }
+                            val correctOn = currentKanji!!.onReadings.any { it.equals(userInput.trim(), ignoreCase = true) }
+                            isCorrect = correctKun || correctOn
+                            if (isCorrect == true) {
+                                showDetails = true
+                            }
+                        },
+                        enabled = userInput.isNotBlank()
+                    ) {
+                        Text("Submit")
+                    }
+                    Button(
+                        onClick = {
+                            skipped = true
+                            showDetails = true // Show the answer
+                        }
+                    ) {
+                        Text("Skip")
+                    }
                 }
             }
         }
